@@ -1,18 +1,23 @@
-import { ChakraProvider, useColorMode,  HStack, Box, Button, Heading } from '@chakra-ui/react'
+import { useColorMode, Box, Button, TabPanel, TabPanels, Tabs, Tab, TabList } from '@chakra-ui/react'
 import { FaMoon, FaSun } from "react-icons/fa";
-import { GoalsSection } from "./Goals"
-import { Stats } from "./Stats"
-
+import { GoalsApp } from './GoalsApp';
+import React from 'react';
 function App() {
   return (
-    <ChakraProvider>
-      <Title text='Welcome Daniel'/>      
-      <HStack>
-          <GoalsSection />
-          <Stats />
-      </HStack>
+    <>
+      <Tabs variant="line">
+        <TabList>
+          <Tab>Goals App</Tab>
+        </TabList>
+
+        <TabPanels>
+          <TabPanel>
+            <GoalsApp />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>      
       <DarkMode />
-    </ChakraProvider>
+    </>
   )
 }
 const DarkMode = () => {
@@ -23,11 +28,6 @@ const DarkMode = () => {
         {colorMode === 'light' ? <FaMoon /> : <FaSun />}
       </Button>
     </Box>
-  )
-}
-const Title = ({ text }) => {
-  return (
-    <Heading textAlign='center'>{text}</Heading>
   )
 }
 export default App

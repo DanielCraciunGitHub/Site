@@ -1,30 +1,29 @@
-import { Container, Heading, Box, Button, HStack, Text, Input, VStack, Checkbox } from "@chakra-ui/react"
-import { useEffect, useMemo } from "react";
-import { v4 as uuid } from "uuid"
+import { Container, Heading, Box, Button, HStack, Text, Input, VStack, Checkbox } from '@chakra-ui/react'
+import { useEffect, useMemo } from 'react'
+import { v4 as uuid } from 'uuid'
 import axios from 'axios'
 import { debounce } from 'lodash'
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux'
 import { updateData, addSlot, removeSlot, updateSlot, addGoal, removeGoal, updateCheckboxValue, updateInputValue } from './reducers/goalSlots'
 
 export const GoalsSection = () => {
     const dispatch = useDispatch()
+    const fetchData = async (endpoint) => {
+        try {
+          const response = await axios.get(endpoint)
+          dispatch(updateData(response.data))
+        } catch (error) {
+          console.error('Error:', error)
+        }
+    }
     useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const response = await axios.get('/api');
-            dispatch(updateData(response.data));
-          } catch (error) {
-            console.error('Error:', error);
-          }
-        };
-        
-        fetchData();
+        fetchData('/api')
       }, [])
     const goalSlots = useSelector((state) => state.goalSlots)
     debouncedSendData('/api', goalSlots)
     
     return (
-        <Box width="50%" backgroundColor="blue">
+        <Box backgroundColor="blue">
             <Box textAlign="left" p="4">
                 <Heading>Goals</Heading>
             </Box>
@@ -66,8 +65,8 @@ const GoalSlot = ({ id }) => {
     )
 }
 const Goals = ({ slotId }) => {
-    const goalSlots = useSelector((state) => state.goalSlots);
-    const goals = goalSlots.find((slot) => slot.id === slotId)?.goals || [];
+    const goalSlots = useSelector((state) => state.goalSlots)
+    const goals = goalSlots.find((slot) => slot.id === slotId)?.goals || []
 
     return (
       <VStack p="4">
@@ -94,7 +93,7 @@ const Goal = ({ slotId, id }) => {
 }
 const debouncedSendData = debounce(async (path, data) => {
     try {
-        const response = await axios.post(path, data)
+        await axios.post(path, data)
     }
     catch (error) {
         console.error('Error: ', error)
